@@ -1,0 +1,1 @@
+from .configuration_qwen2 import Qwen2_5Config
