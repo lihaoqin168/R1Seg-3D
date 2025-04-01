@@ -16,8 +16,7 @@ def rank0_print(*args):
 @dataclass
 class ModelArguments:
     version: Optional[str] = field(default="v0")
-    language_model_name_or_path: str = field(default="./LaMed/pretrained_model/bert_base_uncased/")
-    sam_bert_path: str = field(default="./LaMed/pretrained_model/SegVol/")
+    sam_bert_path: str = field(default="./LaMed/pretrained_model/bert_base_uncased/")
     need_text_en: bool = field(default=True)# of build TextEncoder
     gather_loss: bool = field(default=True, metadata={"help": "Gather all distributed batch data of multiple GPUs and calculate contrastive loss together."})
     local_loss: bool = field(default=False)

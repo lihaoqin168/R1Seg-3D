@@ -26,8 +26,8 @@ def rank0_print(*args):
 @dataclass
 class ModelArguments:
     version: Optional[str] = field(default="v0")
-    model_name_or_path: Optional[str] = field(default="/yulong/pretrain/Phi-3-mini-4k-instruct",
-                                              metadata={"help": "Path to the LLM or MLLM."})
+    model_name_or_path: Optional[str] = field(default="/",
+                                              metadata={"help": "Path to the model weight."})
     model_type: Optional[str] = field(default="phi3", metadata={"help": "llama3, phi3, Qwen2.5, llavaMed"})
     # image
     image_channel: int = field(default=1)
@@ -60,9 +60,10 @@ class ModelArguments:
 
 @dataclass
 class InferringArguments(transformers.TrainingArguments):
+    output_nii: str = field(default="image.nii.gz")
     image_path: str = field(default="/defaultShare/M3D_Data/M3D-Seg/M3D_Seg_npy/0011/s0733/image.npy")
     seg_path: str = field(default="/defaultShare/M3D_Data/M3D-Seg/M3D_Seg_npy/0011/s0733/masks/mask_45.npy")
-
+    description: bool = field(default=True)
     cache_dir: Optional[str] = field(default=None)
     remove_unused_columns: bool = field(default=False)
     model_max_length: int = field(
@@ -142,9 +143,9 @@ def main():
     else:
         raise ValueError(f"Unknown Model Type {model_args.model_type}")
 
-    rank0_print(model)
+    # rank0_print(model)
     model.config.num_clicks = model_args.num_clicks
-    model.config.tune_mm_mlp_adapter = model_args.tune_mm_mlp_adapter
+    model.config.tune_mm_mlp_adapter = False
     rank0_print("=" * 20 + " Dataset preparation " + "=" * 20)
     proj_out_num = model.get_model().mm_projector.proj_out_num
     rank0_print("vision tokens output from projector: ", proj_out_num)
@@ -231,39 +232,30 @@ def main():
 
     #inferring
     model.eval()
-    if torch.cuda.device_count() > 1:
-        from accelerate import dispatch_model
-        from accelerate.utils import infer_auto_device_map, get_balanced_memory
-        device_map = infer_auto_device_map(model, max_memory=get_balanced_memory(model))
-        print('multi GPU predict => {}'.format(device_map))
-        model = dispatch_model(model, device_map)
-    else:
-        model = model.cuda()
-        print("single GPU predict")
+    model = model.cuda()
 
     with torch.no_grad():
         # Hausdorff_metric = HausdorffDistance(percentile=95.0)
         acc_func = DiceMetric(include_background=False, reduction="mean", get_not_nans=True, num_classes=1, ignore_empty=False)
         val_input, val_label = (image.cuda(), seg.cuda())
-        img_name = os.path.basename(inferring_args.image_path)
         question_tensor = tokenizer(question, return_tensors="pt")
         input_id = question_tensor["input_ids"].cuda()
         # attention_mask = question_tensor["attention_mask"].cuda()
-        print("Inference on case {}".format(img_name))
+        print("Inference on case {}".format(inferring_args.image_path))
         # print("question", question)
         print("answer", answer)
-        # print("val_input shape", val_input.shape)
-        # print("val_label shape", val_label.shape)
+        print("val_input shape", val_input.shape)
+        print("val_label shape", val_label.shape)
         # print("input_id shape", input_id.shape)
         # print("attention_mask shape", attention_mask.shape)
 
         # start = time.time()
         # save Nii
-        saveToNii("data_{}".format(img_name), val_input[0, :].cpu(), rot180=True, out_dir=inferring_args.output_dir)
-        saveToNii("target_{}".format(img_name), val_label[0, :].cpu(), rot180=True, sitkcast=True,
+        saveToNii("data_{}".format(inferring_args.output_nii), val_input.cpu(), rot180=True, out_dir=inferring_args.output_dir)
+        saveToNii("target_{}".format(inferring_args.output_nii), val_label.cpu(), rot180=True, sitkcast=True,
                   out_dir=inferring_args.output_dir)
         # inference
-        output_generations, val_outputs = sliding_window_inference(inputs=val_input,
+        output_generations, val_outputs = sliding_window_inference(inputs=val_input.unsqueeze(0),
                                                                    input_ids=input_id,
                                                                    max_new_tokens=100,
                                                                    do_sample=True,
@@ -297,21 +289,23 @@ def main():
             # print('++！！ generated_texts:', generated_text)
             generated_texts.append(generated_text[0])
         # save Nii
-        saveToNii("predict_{}".format(img_name), val_outputs_onehot[0, :], rot180=True, sitkcast=True,
+        print("val_outputs_onehot.shape", val_outputs_onehot.shape)
+        saveToNii("predict_{}".format(inferring_args.output_nii), val_outputs_onehot[0, :].cpu(), rot180=True, sitkcast=False,
                   out_dir=inferring_args.output_dir)
 
-        organ_Dice = acc_func(val_outputs_onehot, val_label).cpu().numpy()[0][0]
+        organ_Dice = acc_func(val_outputs_onehot, val_label.unsqueeze(0)).cpu().numpy()[0][0]
+        print("organ_Dice", organ_Dice)
 
-        with open(os.path.join(inferring_args.output_dir, organ_Dice + '_' + img_name), "w", encoding='utf-8') as f:
+        with open(os.path.join(inferring_args.output_dir, inferring_args.output_nii[:-4]+'_'+str(organ_Dice) + 'rSeg_' + '.txt'), "w", encoding='utf-8') as f:
             f.write(inferring_args.image_path)
             f.write('Dice')
-            f.write(organ_Dice)
+            f.write(str(organ_Dice))
             f.write('question /t/r')
             f.write(question)
             f.write('answer /t/r')
             f.write(answer)
             f.write('generated_texts /t/r')
-            f.write(generated_texts)
+            f.write(str(generated_texts))
             f.close()
         print('organ_Dice', organ_Dice)
 

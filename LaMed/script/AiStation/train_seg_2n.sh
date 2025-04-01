@@ -7,7 +7,8 @@ export NCCL_TIMEOUT=1800000
 accelerate launch --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_SAM_MASK.py \
     --sam_bert_path /107556523204/pretrain/clip-vit-base-patch32/ \
     --pretrained_model /107556523204/pretrain/SegVol/vit_pretrain.ckpt \
-    --num_clicks 1 \
+    --resume_ckpt /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/checkpoint-50000 \
+    --num_clicks 2 \
     --version v0 \
     --local_loss False \
     --gather_loss True \
@@ -21,7 +22,7 @@ accelerate launch --config_file /107556523204/haoqin/code/default6_config.yaml /
     --eval_accumulation_steps 1 \
     --eval_steps 0.01 \
     --save_strategy "steps" \
-    --save_steps 5000 \
+    --save_steps 10000 \
     --save_total_limit 1 \
     --learning_rate 1e-4 \
     --weight_decay 0.1 \
