@@ -4,18 +4,18 @@
 export TOKENIZERS_PARALLELISM=false
 export TORCH_NCCL_BLOCKING_WAIT=1
 
-accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_RSeg.py \
+accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
     --model_name_or_path /107556523204/pretrain/Llama-3.1-8B \
-    --pretrain_mm_mlp_adapter /107556523204/output/R1Seg-3D/LaMed/output/LaMed-qwen-7B-mmproj-X256-step3/mm_projector.bin \
+    --pretrain_mm_mlp_adapter /107556523204/output/R1Seg-3D/LaMed-mmproj-llama3-8B-step2/mm_projector.bin \
     --model_type llama3 \
     --lora_enable True \
     --seg_enable True \
     --tune_vision_module False \
-    --pretrain_vision_model /107556523204/output/R1Seg-3D/LaMed/output/M3DSAM-preVit-A40-X256-cntMmask2/checkpoint-126600/model.safetensors \
+    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --tune_mm_mlp_adapter False \
     --bf16 True \
-    --output_dir /107556523204/output/R1Seg-3D/LaMed/output/LaMed-llama3-8B-finetune-X256-step4 \
+    --output_dir /107556523204/output/R1Seg-3D/LaMed-Lora-llama3-8B-step3 \
     --num_train_epochs 3 \
     --per_device_train_batch_size 2 \
     --per_device_eval_batch_size 4 \

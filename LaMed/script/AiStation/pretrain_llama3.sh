@@ -4,16 +4,16 @@
 export TOKENIZERS_PARALLELISM=false
 export TORCH_NCCL_BLOCKING_WAIT=1
 
-accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_RSeg.py \
+accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
     --model_name_or_path /107556523204/pretrain/Llama-3.1-8B \
     --model_type llama3 \
     --lora_enable False \
     --seg_enable False \
-    --pretrain_vision_model /107556523204/output/R1Seg-3D/LaMed/output/M3DSAM-preVit-A40-X256-cntMmask2/checkpoint-126600/model.safetensors \
+    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --tune_mm_mlp_adapter True \
     --bf16 True \
-    --output_dir /107556523204/output/R1Seg-3D/LaMed/output/LaMed-llama3-8B-mmproj-X256-step3 \
+    --output_dir /107556523204/output/R1Seg-3D/LaMed-mmproj-llama3-8B-step2 \
     --num_train_epochs 2 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
@@ -22,7 +22,7 @@ accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml 
     --eval_accumulation_steps 1 \
     --eval_steps 0.04 \
     --save_strategy "steps" \
-    --save_steps 1000000 \
+    --save_steps 10000 \
     --save_total_limit 1 \
     --learning_rate 1e-4 \
     --weight_decay 0. \
