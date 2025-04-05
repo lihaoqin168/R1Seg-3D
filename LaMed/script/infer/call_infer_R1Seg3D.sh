@@ -8,7 +8,8 @@ lab="$1"  # 双引号包裹以处理可能的特殊字符
 # 循环调用sh，并传入参数 array
 for item in "${array[@]}"; do
     echo "Calling infer_phi3_R1Seg3D_2nk.sh with item=${item} lab=${lab} "
-    bash infer_phi3_R1Seg3D_2nk.sh "${item}" "${lab}"
+#    bash infer_phi3_R1Seg3D_2nk.sh "${item}" "${lab}"
+    bash infer_llama3_R1Seg3D_2nk.sh "${item}" "${lab}"
 done
 
 echo "All calls to infer_phi3_R1Seg3D_2nk.sh completed. Elements processed: ${array[*]}"

@@ -4,15 +4,18 @@
 #export TOKENIZERS_PARALLELISM=false
 export NCCL_TIMEOUT=1800000
 
-accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_LLM_Seg3D.py \
+accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_LLM_Seg3D.py \
     --version v0 \
-    --model_name_or_path /107556523204/pretrain/Phi-3-mini-4k-instruct \
-    --model_type phi3 \
+    --model_name_or_path /107556523204/pretrain/Llama-3.1-8B \
+    --pretrain_mllm /107556523204/output/LLM_Seg3D/LaMed-Lora-Llama-8B-step3/model_with_lora.bin \
+    --model_type llama3 \
     --lora_enable True \
+    --tune_vision_module True \
     --seg_enable True \
+    --tune_mm_mlp_adapter false \
     --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --bf16 True \
-    --output_dir /107556523204/output/LLM_Seg3D/LaMed-Lora-Phi3-4B-step3 \
+    --output_dir /107556523204/output/LLM_Seg3D/LaMed-finetune-rseg-Lora-Llama-8B-step4 \
     --num_train_epochs 5 \
     --per_device_train_batch_size 6 \
     --per_device_eval_batch_size 4 \
