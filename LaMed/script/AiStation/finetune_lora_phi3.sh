@@ -4,18 +4,19 @@
 #export TOKENIZERS_PARALLELISM=false
 export NCCL_TIMEOUT=1800000
 
-accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
+accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
+    --num_clicks 2 \
     --model_name_or_path /107556523204/pretrain/Phi-3-mini-4k-instruct \
     --pretrain_mm_mlp_adapter /107556523204/output/R1Seg-3D/LaMed-mmproj-Phi3-4B-step2/mm_projector.bin \
     --model_type phi3 \
     --lora_enable True \
     --seg_enable True \
     --tune_mm_mlp_adapter false \
-    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg-3dsam.bin \
+    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --bf16 True \
     --output_dir /107556523204/output/R1Seg-3D/LaMed-Lora-Phi3-4B-step3 \
-    --num_train_epochs 5 \
+    --num_train_epochs 3 \
     --per_device_train_batch_size 6 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 1 \
@@ -23,7 +24,7 @@ accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml 
     --eval_accumulation_steps 1 \
     --eval_steps 0.5 \
     --save_strategy "steps" \
-    --save_steps 5000 \
+    --save_steps 10000 \
     --save_total_limit 1 \
     --learning_rate 5e-5 \
     --weight_decay 0. \

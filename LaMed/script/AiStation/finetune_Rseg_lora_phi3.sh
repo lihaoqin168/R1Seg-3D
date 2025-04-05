@@ -3,9 +3,11 @@
 # run "accelerate config" first!
 #export TOKENIZERS_PARALLELISM=false
 export NCCL_TIMEOUT=1800000
-
-accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
+#/107556523204/output/M3D-ViT-RSeg/LaMed/output/LaMed-Phi3-4B-Lora-finetune-X256-mask-step4/model_with_lora.bin
+#/107556523204/output/M3D-ViT-RSeg/LaMed/output/LaMed-Phi3-4B-Lora-finetune-X256-mask-ep10step4
+accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
+    --num_clicks 2 \
     --model_name_or_path /107556523204/pretrain/Phi-3-mini-4k-instruct \
     --pretrain_mllm /107556523204/output/R1Seg-3D/LaMed-Lora-Phi3-4B-step3/model_with_lora.bin \
     --model_type phi3 \
@@ -13,10 +15,10 @@ accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml 
     --tune_vision_module True \
     --seg_enable True \
     --tune_mm_mlp_adapter false \
-    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg-3dsam.bin \
+    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --bf16 True \
     --output_dir /107556523204/output/R1Seg-3D/LaMed-finetune-rseg-Lora-Phi3-4B-step4 \
-    --num_train_epochs 5 \
+    --num_train_epochs 3 \
     --per_device_train_batch_size 6 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 1 \

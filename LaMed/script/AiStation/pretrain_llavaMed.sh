@@ -6,6 +6,7 @@ export TORCH_NCCL_BLOCKING_WAIT=1
 
 accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
+    --num_clicks 2 \
     --model_name_or_path /107556523204/pretrain/llava-med-v1.5-mistral-7b \
     --model_type llavaMed1.5 \
     --lora_enable False \

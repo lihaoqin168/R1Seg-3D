@@ -7,13 +7,13 @@ export NCCL_TIMEOUT=1800000
 accelerate launch --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3DSAM.py \
     --sam_bert_path /107556523204/pretrain/clip-vit-base-patch32/ \
     --pretrained_model /107556523204/pretrain/SegVol/vit_pretrain.ckpt \
-    --num_clicks 2 \
+    --num_clicks 1 \
     --version v0 \
     --local_loss False \
     --gather_loss True \
     --bf16 True \
     --output_dir /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1 \
-    --num_train_epochs 10 \
+    --num_train_epochs 100 \
     --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 1 \
@@ -30,7 +30,7 @@ accelerate launch --config_file /107556523204/haoqin/code/default6_config.yaml /
     --logging_steps 0.001 \
     --gradient_checkpointing False \
     --dataloader_pin_memory True\
-    --dataloader_num_workers 4 \
+    --dataloader_num_workers 10 \
     --report_to tensorboard \
     --data_root /defaultShare/M3D_Data/ \
     --seg_data_path /defaultShare/M3D_Data/M3D-Seg/M3D_Seg_npy \

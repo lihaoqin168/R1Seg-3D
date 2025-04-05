@@ -5,8 +5,9 @@
 #export TORCH_NCCL_BLOCKING_WAIT=1
 export NCCL_TIMEOUT=1800000
 
-accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
+accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
+    --num_clicks 2 \
     --model_name_or_path /107556523204/pretrain/Phi-3-mini-4k-instruct \
     --model_type phi3 \
     --lora_enable False \
@@ -15,7 +16,7 @@ accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml 
     --tune_mm_mlp_adapter True \
     --bf16 True \
     --output_dir /107556523204/output/R1Seg-3D/LaMed-mmproj-Phi3-4B-step2 \
-    --num_train_epochs 3 \
+    --num_train_epochs 2 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 1 \

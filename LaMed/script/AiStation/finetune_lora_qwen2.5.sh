@@ -6,13 +6,14 @@ export TORCH_NCCL_BLOCKING_WAIT=1
 
 accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
+    --num_clicks 2 \
     --model_name_or_path /107556523204/pretrain/Qwen2.5-7B \
     --pretrain_mm_mlp_adapter /107556523204/output/R1Seg-3D/LaMed-mmproj-qwen-7B-step2/mm_projector.bin \
     --model_type Qwen2.5 \
     --lora_enable True \
     --seg_enable True \
     --tune_vision_module False \
-    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg-3dsam.bin \
+    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --tune_mm_mlp_adapter False \
     --bf16 True \
     --output_dir /107556523204/output/R1Seg-3D/LaMed-Lora-Qwen25-7B-step3/ \
@@ -24,7 +25,7 @@ accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml 
     --eval_accumulation_steps 1 \
     --eval_steps 0.04 \
     --save_strategy "steps" \
-    --save_steps 1000000 \
+    --save_steps 10000 \
     --save_total_limit 1 \
     --learning_rate 5e-5 \
     --weight_decay 0. \
