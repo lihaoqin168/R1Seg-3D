@@ -2,7 +2,7 @@
 #Phi-3-mini-4k-instruct
 # run "accelerate config" first!
 #export TOKENIZERS_PARALLELISM=false
-export NCCL_TIMEOUT=1800000
+export NCCL_TIMEOUT=1800
 
 accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
@@ -16,8 +16,8 @@ accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml 
     --tune_mm_mlp_adapter false \
     --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --bf16 True \
-    --output_dir /107556523204/output/R1Seg-3D/LaMed-finetune-rseg-Lora-llama3-8B-step4-ep15 \
-    --num_train_epochs 5 \
+    --output_dir /107556523204/output/R1Seg-3D/LaMed-finetune-rseg-Lora-llama3-8B-step4-ep12 \
+    --num_train_epochs 3 \
     --per_device_train_batch_size 2 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 1 \

@@ -20,7 +20,7 @@ def saveToNii(out_file, img_mask, sitkcast=False, rot180=False, out_dir=None):
         img_mask = img_mask[0, :]
     ## save
     # print("1 img_mask.shape", img_mask.shape)
-    img_mask = np.transpose(img_mask, (2, 1, 0))
+    # img_mask = np.transpose(img_mask, (0, 1, 2))
     if rot180:
         img_mask = np.rot90(img_mask, axes=(1, 2))
         img_mask = np.rot90(img_mask, axes=(1, 2))

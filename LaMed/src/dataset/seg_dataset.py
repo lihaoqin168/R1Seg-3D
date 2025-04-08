@@ -9,7 +9,7 @@ import monai.transforms as mtf
 from monai.data import load_decathlon_datalist
 from monai.data import set_track_meta
 from .dataset_info import dataset_info
-from .prompt_templates import SAM_textPrompt
+# from .prompt_templates import SAM_textPrompt
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -132,7 +132,7 @@ class SegDataset(Dataset):
         self.tag = tag
         self.mode = mode
         self.dataset_info = dataset_info
-        self.sam_textPrompt = SAM_textPrompt
+        # self.sam_textPrompt = SAM_textPrompt
 
         root_path = args.seg_data_path
         if mode == "train":
@@ -262,8 +262,7 @@ class SegDataset(Dataset):
                 #     text, max_length=self.args.max_length, truncation=True, padding="max_length",
                 #     return_tensors="pt"
                 # )
-                # # print("++text_tensor", len(text_tensor))
-                #
+
                 # input_id = text_tensor["input_ids"][0]
                 # attention_mask = text_tensor["attention_mask"][0]
                 #
@@ -271,15 +270,14 @@ class SegDataset(Dataset):
                 # if valid_len < len(input_id):
                 #     input_id[valid_len] = self.tokenizer.eos_token_id
                 target = cls_list[cls_id]
-                promptarget = random.choice(self.sam_textPrompt).format(target)
-                # target = 'The scans has {} in a computerized tomography.'.format(target)
+                # promptarget = random.choice(self.sam_textPrompt).format(target)
+                # promptarget = 'A {} in the computerized tomography.'.format(target)
+                promptarget = 'A computerized tomography of a {}.'.format(target)
                 ret = {
                     'image': image,
                     'promptarget': promptarget,
                     'impath': image_path,
                     'seg': seg,
-                    # 'input_id': input_id,
-                    # 'attention_mask': attention_mask,
                     'question_type': "seg",
                 }
                 return ret
@@ -297,7 +295,7 @@ class SegDatasets(Dataset):
         self.dataset_info = dataset_info
 
         self.ds_list = []
-        self.ds_list.append(CaptionRefSegDataset(args, mode=mode))
+        # self.ds_list.append(CaptionRefSegDataset(args, mode=mode))
         for dataset_code in self.dataset_info.keys():
             self.ds_list.append(SegDataset(args, tag=dataset_code, mode=mode))
         self.dataset = ConcatDataset(self.ds_list)

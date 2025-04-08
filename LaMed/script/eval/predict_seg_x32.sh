@@ -7,7 +7,7 @@ num=$1
 echo "Running A.sh with num=$num"
 
 # run "accelerate config" first!
-CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/M3D-ViT-RSeg/eval_SAM_MASK.py \
+CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/M3D-ViT-RSeg/eval_R1Seg3D_SAM.py \
     --sam_bert_path /107556523204/pretrain/clip-vit-base-patch32/ \
     --pretrained_model /107556523204/output/M3D-ViT-RSeg/LaMed/output/M3DSAM-A30-32-cntMmask/model.safetensors \
     --num_clicks 2 \

@@ -5,7 +5,6 @@ class R1Seg3DSAM_Config(PretrainedConfig):
 
     def __init__(
         self,
-        language_model_name_or_path: str = "",
         sam_bert_path: str = "",
         local_loss: bool = False,
         gather_loss: bool = True,
@@ -24,7 +23,6 @@ class R1Seg3DSAM_Config(PretrainedConfig):
         num_clicks: int = 0,
         **kwargs,
     ):
-        self.language_model_name_or_path = language_model_name_or_path
         self.sam_bert_path = sam_bert_path
         self.in_channels = in_channels
         self.img_size = img_size

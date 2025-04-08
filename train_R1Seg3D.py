@@ -68,7 +68,7 @@ class ModelArguments:
     pos_embed: str = field(default="perceptron")
     dropout_rate: float = field(default=0.0)
     spatial_dims: int = field(default=3)
-    num_clicks: int = field(default=2)
+    num_clicks: int = field(default=0)
 
 
 @dataclass
@@ -462,7 +462,9 @@ def main():
     # if you want to resume your training, pls set the checkpoint in trainer.train(resume_from_checkpoint="")
     if model_args.resume_ckpt is not None:
         trainer.train(resume_from_checkpoint=model_args.resume_ckpt)
-    trainer.train()
+    else:
+        trainer.train()
+
     trainer.save_state()
     model.config.use_cache = True
 

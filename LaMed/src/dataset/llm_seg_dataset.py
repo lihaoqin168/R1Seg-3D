@@ -98,8 +98,8 @@ class SegDataset(Dataset):
         self.des_questions = Seg_templates["des_questions"]
         self.cls_answers = Seg_templates["cls_answers"]
         self.des_answers = Seg_templates["des_answers"]
-        self.cls_no_answers = Seg_templates["cls_no_answers"]
-        self.des_no_answers = Seg_templates["des_no_answers"]
+        # self.cls_no_answers = Seg_templates["cls_no_answers"]
+        # self.des_no_answers = Seg_templates["des_no_answers"]
 
     def __len__(self):
         return len(self.data_list)

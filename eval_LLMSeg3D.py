@@ -13,10 +13,8 @@ from LaMed.src.utils.slidingWindowInference import sliding_window_inference
 import numpy as np
 import pandas as pd
 from LaMed.src.dataset.multi_dataset import SegDataset, RefSegDataset
-from LaMed.src.model.language_model.lamed_phi3_crossA import LamedPhi3ForCausalLMCrossA
-from LaMed.src.model.language_model.lamed_llama import LamedLlamaForCausalLM
-from LaMed.src.model.language_model.lamed_llava_med import LlavaMistralForCausalLM
-from LaMed.src.model.language_model.lamed_Qwen2 import LamedQwenForCausalLM
+from LaMed.src.model.language_model.phi3_Seg3D import Phi3_Seg3DForCausalLM
+
 # from LaMed.src.dataset.dataset_info import dataset_info
 # from torch.utils.data import ConcatDataset
 
@@ -79,7 +77,7 @@ class ModelArguments:
     pos_embed: str = field(default="perceptron")
     dropout_rate: float = field(default=0.0)
     spatial_dims: int = field(default=3)
-    num_clicks: int = field(default=2)
+    num_clicks: int = field(default=0)
 
 
 @dataclass
@@ -250,23 +248,8 @@ def main():
     rank0_print("seg_token_id: ", model_args.seg_token_id)
     rank0_print("vocab_size: ", model_args.vocab_size)
 
-    if 'phi3' in model_args.model_type:
-        model = LamedPhi3ForCausalLMCrossA.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=training_args.cache_dir
-        )
-    elif 'llama3' in model_args.model_type:
-        model = LamedLlamaForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=training_args.cache_dir
-        )
-    elif 'Qwen2.5' in model_args.model_type:
-        model = LamedQwenForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=training_args.cache_dir
-        )
-    elif 'llavaMed1.5' in model_args.model_type:
-        model = LlavaMistralForCausalLM.from_pretrained(
+    if 'llm_phi3' in model_args.model_type:
+        model = Phi3_Seg3DForCausalLM.from_pretrained(
             model_args.model_name_or_path,
             cache_dir=training_args.cache_dir
         )
@@ -498,6 +481,8 @@ def main():
         csv_dict["val"] = col6
         df = pd.DataFrame(csv_dict)
         # 保存 dataframe
+        if not os.path.exists(training_args.output_dir):
+            os.mkdir(training_args.output_dir)
         df.to_csv(os.path.join(training_args.output_dir, "Llamed_" + model_args.model_type + "_num_clicks" + str(
             model_args.num_clicks) + "_" + data_args.dataset_code + "_report.csv"))
 

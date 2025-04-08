@@ -2,9 +2,9 @@
 #Phi-3-mini-4k-instruct
 # run "accelerate config" first!
 #export TOKENIZERS_PARALLELISM=false
-export NCCL_TIMEOUT=1800000
+export NCCL_TIMEOUT=1800
 
-accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_LLM_Seg3D.py \
+accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_LLM_Seg3D.py \
     --version v0 \
     --model_name_or_path /107556523204/pretrain/Phi-3-mini-4k-instruct \
     --model_type phi3 \

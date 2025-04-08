@@ -2,14 +2,15 @@
 #Phi-3-mini-4k-instruct
 # run "accelerate config" first!
 #export TOKENIZERS_PARALLELISM=false
-export NCCL_TIMEOUT=1800000
-#/107556523204/output/M3D-ViT-RSeg/LaMed/output/LaMed-Phi3-4B-Lora-finetune-X256-mask-step4/model_with_lora.bin
+export NCCL_TIMEOUT=1800  # 1800秒 = 30分钟
+# /107556523204/output/M3D-ViT-RSeg/LaMed/output/LaMed-Phi3-4B-Lora-finetune-X256-mask-step4/model_with_lora.bin
 #/107556523204/output/M3D-ViT-RSeg/LaMed/output/LaMed-Phi3-4B-Lora-finetune-X256-mask-ep10step4
 accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
     --num_clicks 2 \
     --model_name_or_path /107556523204/pretrain/Phi-3-mini-4k-instruct \
     --pretrain_mllm /107556523204/output/R1Seg-3D/LaMed-Lora-Phi3-4B-step3/model_with_lora.bin \
+    --resume_ckpt /107556523204/output/R1Seg-3D/LaMed-finetune-rseg-Lora-Phi3-4B-step4/checkpoint-15000 \
     --model_type phi3 \
     --lora_enable True \
     --tune_vision_module True \

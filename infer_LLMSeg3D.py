@@ -9,10 +9,7 @@ from monai.metrics import DiceMetric
 from LaMed.src.utils.nii_utils import saveToNii
 from LaMed.src.utils.slidingWindowInference import sliding_window_inference
 import numpy as np
-from LaMed.src.model.language_model.lamed_phi3_crossA import LamedPhi3ForCausalLMCrossA
-from LaMed.src.model.language_model.lamed_llama import LamedLlamaForCausalLM
-from LaMed.src.model.language_model.lamed_llava_med import LlavaMistralForCausalLM
-from LaMed.src.model.language_model.lamed_Qwen2 import LamedQwenForCausalLM
+from LaMed.src.model.language_model.phi3_Seg3D import Phi3_Seg3DForCausalLM
 import monai.transforms as mtf
 from LaMed.src.dataset.dataset_info import dataset_info
 from LaMed.src.dataset.prompt_templates import Seg_templates
@@ -121,22 +118,7 @@ def main():
     rank0_print("vocab_size: ", model_args.vocab_size)
 
     if 'phi3' in model_args.model_type:
-        model = LamedPhi3ForCausalLMCrossA.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=inferring_args.cache_dir
-        )
-    elif 'llama3' in model_args.model_type:
-        model = LamedLlamaForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=inferring_args.cache_dir
-        )
-    elif 'Qwen2.5' in model_args.model_type:
-        model = LamedQwenForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=inferring_args.cache_dir
-        )
-    elif 'llavaMed1.5' in model_args.model_type:
-        model = LlavaMistralForCausalLM.from_pretrained(
+        model = Phi3_Seg3DForCausalLM.from_pretrained(
             model_args.model_name_or_path,
             cache_dir=inferring_args.cache_dir
         )
@@ -147,8 +129,6 @@ def main():
     model.config.num_clicks = model_args.num_clicks
     model.config.tune_mm_mlp_adapter = False
     rank0_print("=" * 20 + " Dataset preparation " + "=" * 20)
-    proj_out_num = model.get_model().mm_projector.proj_out_num
-    rank0_print("vision tokens output from projector: ", proj_out_num)
 
     val_transform = mtf.Compose(
         [
@@ -173,36 +153,18 @@ def main():
     seg = it['seg']  # 1*D*H*W
 
     cls_list = dataset_info["0011"]
-    vld_cls = torch.nonzero(torch.sum(seg, dim=(1, 2, 3))).flatten().tolist()
     cls_questions = Seg_templates["cls_questions"]
     des_questions = Seg_templates["des_questions"]
     cls_answers = Seg_templates["cls_answers"]
     des_answers = Seg_templates["des_answers"]
-    cls_no_answers = Seg_templates["cls_no_answers"]
-    des_no_answers = Seg_templates["des_no_answers"]
-    image_tokens = "<im_patch>" * proj_out_num
-    if vld_cls:
-        if not inferring_args.description:
-            question_temple = random.choice(cls_questions)
-            question = question_temple.format(cls_list[cls_id])
-            question = image_tokens + ' ' + question
-            answer = random.choice(cls_answers)
-        else:
-            question_temple = random.choice(des_questions)
-            question = question_temple.format(random.choice(term_dict[cls_list[cls_id]]))
-            question = image_tokens + ' ' + question
-            answer = random.choice(des_answers).format(cls_list[cls_id])
+    if not inferring_args.description:
+        question_temple = random.choice(cls_questions)
+        question = question_temple.format(cls_list[cls_id])
+        answer = random.choice(cls_answers)
     else:
-        if not inferring_args.description:
-            question_temple = random.choice(cls_questions)
-            question = question_temple.format(cls_list[cls_id])
-            question = image_tokens + ' ' + question
-            answer = random.choice(cls_no_answers).format(cls_list[cls_id])
-        else:
-            question_temple = random.choice(des_questions)
-            question = question_temple.format(random.choice(term_dict[cls_list[cls_id]]))
-            question = image_tokens + ' ' + question
-            answer = random.choice(des_no_answers).format(cls_list[cls_id])
+        question_temple = random.choice(des_questions)
+        question = question_temple.format(random.choice(term_dict[cls_list[cls_id]]))
+        answer = random.choice(des_answers).format(cls_list[cls_id])
 
     text_tensor = tokenizer(
         question + ' ' + answer, max_length=inferring_args.model_max_length, truncation=True, padding="max_length",

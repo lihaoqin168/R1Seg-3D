@@ -12,7 +12,8 @@ import monai.transforms as mtf
 from LaMed.src.dataset.dataset_info import dataset_info
 from LaMed.src.model.r1Seg3DSAM_Config import R1Seg3DSAM_Config
 from LaMed.src.model.build_vit3dseg import model_registry
-
+from monai import transforms
+from safetensors.torch import load_file
 
 local_rank = 0
 def rank0_print(*args):
@@ -23,15 +24,10 @@ def rank0_print(*args):
 class ModelArguments:
     version: Optional[str] = field(default="v0")
     sam_bert_path: Optional[str] = field(default="./LaMed/pretrained_model/bert_base_uncased/")
-    sam_path: Optional[str] = field(default="/",
+    pretrained_model: Optional[str] = field(default="/",
                                               metadata={"help": "Path to the model weight."})
     need_text_en: bool = field(default=True)  # of build TextEncoder
-    gather_loss: bool = field(default=True, metadata={
-        "help": "Gather all distributed batch data of multiple GPUs and calculate contrastive loss together."})
-    local_loss: bool = field(default=False)
     test_mode: bool = field(default=True)
-    resume_ckpt: str = field(default=None)
-    pretrained_model: str = field(default=None)
     in_channels: int = field(default=1)
     img_size: tuple = field(default=(32, 256, 256))
     patch_size: tuple = field(default=(4, 16, 16))
@@ -42,7 +38,7 @@ class ModelArguments:
     pos_embed: str = field(default="perceptron")
     dropout_rate: float = field(default=0.0)
     spatial_dims: int = field(default=3)
-    num_clicks: int = field(default=2)
+    num_clicks: int = field(default=0)
 
 @dataclass
 class InferringArguments(transformers.TrainingArguments):
@@ -72,17 +68,20 @@ def main():
     # model_args.max_length = data_args.max_length
     config = R1Seg3DSAM_Config.from_dict(vars(model_args))
     config.mm_hidden_size = model_args.hidden_size
-    model = model_registry['vit'](config=config)   # checkpoint for pretrained ViT
+    model = model_registry['vit'](config=config, checkpoint=None) # checkpoint for pretrained ViT
+    # rank0_print(model)
 
-    if model_args.sam_path is not None:
-        ckpt = torch.load(model_args.sam_path, map_location='cpu')
+    if model_args.pretrained_model is not None:
+        if model_args.pretrained_model.find(".safetensors") > 0:
+            ckpt = load_file(model_args.pretrained_model)
+        else:
+            ckpt = torch.load(model_args.pretrained_model, map_location='cpu')
         model.load_state_dict(ckpt, strict=True)
         # rank0_print("pretrained_model >>>>>>>>>>>>>", ckpt.keys())
         rank0_print(">>>>>>>>>>>>>load pretrained model>>>>>>>>>>>>>")
 
-    # rank0_print(model)
 
-    val_transform = mtf.Compose(
+    val_transform = transforms.Compose(
         [
             mtf.SpatialPadd(keys=["image", "seg"], spatial_size=model_args.img_size, mode='constant'),
             mtf.ToTensord(keys=["image"], dtype=torch.float),
@@ -105,7 +104,6 @@ def main():
     seg = it['seg']  # 1*D*H*W
 
     cls_list = dataset_info["0011"]
-    # promptarget = 'A {} in the computerized tomography.'.format(cls_list[cls_id])
     promptarget = 'A computerized tomography of a {}.'.format(cls_list[cls_id])
     print("promptarget", promptarget)
 

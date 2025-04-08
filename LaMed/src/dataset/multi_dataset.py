@@ -1036,7 +1036,7 @@ class MultiSegDataset(Dataset):
         self.dataset_info = dataset_info
 
         self.ds_list = []
-        self.ds_list.append(RefSegDataset(args, tokenizer, mode=mode))
+        # self.ds_list.append(RefSegDataset(args, tokenizer, mode=mode))
         for dataset_code in self.dataset_info.keys():
             self.ds_list.append(SegDataset(args, tokenizer, tag=dataset_code, description=False, mode=mode))
             self.ds_list.append(SegDataset(args, tokenizer, tag=dataset_code, description=True, mode=mode))

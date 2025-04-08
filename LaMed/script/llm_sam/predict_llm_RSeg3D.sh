@@ -1,20 +1,21 @@
 #!/bin/bash
+# -*- coding: utf-8 -*-
 # 获取传入的参数
 num=$1
 
 # 使用参数
 echo "Running A.sh with num=$num"
 
-# run "accelerate config" first!
-CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/M3D-ViT-RSeg/eval_R1Seg3D_SAM.py \
-    --sam_bert_path /107556523204/pretrain/clip-vit-base-patch32/ \
-    --pretrained_model /107556523204/output/M3D-ViT-RSeg/LaMed/output/M3DSAM-preVit-A40-X256-cntMmask2/checkpoint-126600/model.safetensors \
+CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/R1Seg-3D/llm_phi3.py \
+    --model_name_or_path /107556523204/output/M3D-ViT-RSeg/LaMed/output_model/LaMed-Phi3-4B-X256-2nkSegcnt \
     --num_clicks 2 \
+    --model_type phi3 \
     --version v0 \
     --test_mode True \
     --bf16 True \
+    --description True \
     --dataset_code $num \
-    --output_dir /107556523204/haoqin/code/M3D-ViT-RSeg/eval_outputSAM/ \
+    --output_dir /107556523204/haoqin/eval_llmSeg3D_phi3/ \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \

@@ -7,14 +7,14 @@ num=$1
 echo "Running A.sh with num=$num"
 
 # run "accelerate config" first!
-CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/M3D-ViT-RSeg/eval_SegVol.py \
+CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/R1Seg-3D/eval_R1Seg3D_SAM.py \
     --sam_bert_path /107556523204/pretrain/clip-vit-base-patch32/ \
-    --pretrained_model /107556523204/pretrain/SegVol/pytorch_model.bin \
+    --pretrained_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/checkpoint-124300/model.safetensors \
     --version v0 \
     --test_mode True \
     --bf16 True \
     --dataset_code $num \
-    --output_dir /107556523204/haoqin/code/M3D-ViT-RSeg/eval_outputSegVol/ \
+    --output_dir /107556523204/haoqin/eval_RSeg3D/eval_R1Seg-3DSAM-step1/ \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \

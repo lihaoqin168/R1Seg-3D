@@ -17,12 +17,12 @@ def rank0_print(*args):
 class ModelArguments:
     version: Optional[str] = field(default="v0")
     sam_bert_path: str = field(default="./LaMed/pretrained_model/bert_base_uncased/")
+    pretrained_model: str = field(default=None)
     need_text_en: bool = field(default=True)# of build TextEncoder
     gather_loss: bool = field(default=True, metadata={"help": "Gather all distributed batch data of multiple GPUs and calculate contrastive loss together."})
     local_loss: bool = field(default=False)
     test_mode: bool = field(default=False)
     resume_ckpt: str = field(default=None)
-    pretrained_model: str = field(default=None)
     in_channels: int = field(default=1)
     img_size: tuple = field(default=(32, 256, 256))
     patch_size: tuple = field(default=(4, 16, 16))
@@ -33,7 +33,7 @@ class ModelArguments:
     pos_embed: str = field(default="perceptron")
     dropout_rate: float = field(default=0.0)
     spatial_dims: int = field(default=3)
-    num_clicks: int = field(default=2)
+    num_clicks: int = field(default=0)
 
 @dataclass
 class DataArguments:
@@ -103,7 +103,6 @@ def preprocess_logits_for_metrics(logits, labels):
 class DataCollator:
     def __init__(self, gather_all):
         self.gather_all = gather_all
-
     def __call__(self, batch: list) -> dict:
         images, impaths, promptargets, segs = tuple(
                 [b[key] for b in batch] for key in ('image', 'impath', 'promptarget', 'seg'))
@@ -172,16 +171,18 @@ def main():
                       )
 
     # if you want to resume your training, pls set the checkpoint in trainer.train(resume_from_checkpoint="")
-    if model_args.resume_ckpt is not None:
-        trainer.train(resume_from_checkpoint=model_args.resume_ckpt)
-    trainer.train()
+    try:
+        if model_args.resume_ckpt is not None:
+            trainer.train(resume_from_checkpoint=model_args.resume_ckpt)
+        else:
+            trainer.train()
+    finally:
+        trainer.save_state()
+        state_dict = model.state_dict()
+        torch.save(state_dict, os.path.join(training_args.output_dir, 'r1seg_3dsam.bin'))
 
-    trainer.save_state()
-    state_dict = model.state_dict()
-    torch.save(state_dict, os.path.join(training_args.output_dir, 'r1seg-3dsam.bin'))
-
-    state_dict = model.image_encoder.state_dict()
-    torch.save(state_dict, os.path.join(training_args.output_dir, 'seg_vit.bin'))
+        state_dict = model.image_encoder.state_dict()
+        torch.save(state_dict, os.path.join(training_args.output_dir, 'seg_vit.bin'))
 
 
 if __name__ == "__main__":

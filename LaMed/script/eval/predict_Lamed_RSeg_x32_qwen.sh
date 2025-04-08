@@ -10,7 +10,7 @@ echo "Running A.sh with num=$num"
 export TOKENIZERS_PARALLELISM=false
 export TORCH_NCCL_BLOCKING_WAIT=1
 # accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml  
-CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/M3D-ViT-RSeg/eval_Lamed_RSeg.py \
+CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/M3D-ViT-RSeg/eval_R1Seg3D.py \
     --model_name_or_path /107556523204/output/M3D-ViT-RSeg/LaMed/output_model/LaMed-qwen-7B-X256-2nkSegcnt \
     --num_clicks 2 \
     --model_type Qwen2.5 \

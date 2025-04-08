@@ -5,7 +5,7 @@
 # 使用参数
 #echo "Running A.sh with num=$num"
 
-CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/M3D-ViT-RSeg/eval_Lamed_RSeg.py \
+CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/M3D-ViT-RSeg/eval_R1Seg3D.py \
     --model_name_or_path /107556523204/output/M3D-ViT-RSeg/LaMed/output_model/LaMed-Phi3-4B-X256 \
     --num_clicks 0 \
     --model_type phi3 \

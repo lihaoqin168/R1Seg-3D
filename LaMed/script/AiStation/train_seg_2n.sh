@@ -2,8 +2,7 @@
 
 # run "accelerate config" first!
 #export TOKENIZERS_PARALLELISM=false
-export NCCL_TIMEOUT=1800000
-
+export NCCL_TIMEOUT=1800  # 1800秒 = 30分钟
 accelerate launch --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3DSAM.py \
     --sam_bert_path /107556523204/pretrain/clip-vit-base-patch32/ \
     --pretrained_model /107556523204/pretrain/SegVol/vit_pretrain.ckpt \

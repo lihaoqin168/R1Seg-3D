@@ -3,8 +3,7 @@
 # run "accelerate config" first!
 #export TOKENIZERS_PARALLELISM=false
 #export TORCH_NCCL_BLOCKING_WAIT=1
-export NCCL_TIMEOUT=1800000
-
+export NCCL_TIMEOUT=1800  # 1800秒 = 30分钟
 accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
     --num_clicks 2 \
@@ -24,7 +23,7 @@ accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml 
     --eval_accumulation_steps 1 \
     --eval_steps 0.04 \
     --save_strategy "steps" \
-    --save_steps 5000 \
+    --save_steps 20000 \
     --save_total_limit 1 \
     --learning_rate 1e-4 \
     --weight_decay 0. \

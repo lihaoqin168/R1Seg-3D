@@ -1,8 +1,7 @@
 #!/bin/bash
 #Phi-3-mini-4k-instruct
 # run "accelerate config" first!
-#export TOKENIZERS_PARALLELISM=false
-export NCCL_TIMEOUT=1800000
+export NCCL_TIMEOUT=1800  # 1800秒 = 30分钟
 
 accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \

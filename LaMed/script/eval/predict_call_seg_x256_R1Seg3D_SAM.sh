@@ -10,9 +10,9 @@ end_num=24
 num=$start_num
 while [ $num -le $end_num ]; do
     expanded_num=$(printf "%04d" "$num")
-    echo "Calling predict_seg_x256_SegVol.sh with num=$expanded_num"
-    bash predict_seg_x256_SegVol.sh $expanded_num
+    echo "Calling predict_seg_x256_R1Seg3D_SAM.sh with num=$expanded_num"
+    bash predict_seg_x256_R1Seg3D_SAM.sh $expanded_num
     num=$((num + 1))
 done
 
-echo "All calls to predict_seg_x256_SegVol.sh completed. $start_num -- $end_num"
+echo "All calls to predict_seg_x256_R1Seg3D_SAM.sh completed. $start_num -- $end_num"

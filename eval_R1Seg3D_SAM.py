@@ -25,19 +25,14 @@ def rank0_print(*args):
 @dataclass
 class ModelArguments:
     version: Optional[str] = field(default="v0")
-    sam_bert_path: str = field(default="./LaMed/pretrained_model/SegVol/")
+    sam_bert_path: str = field(default=None)
+    pretrained_model: str = field(default=None)
     need_text_en: bool = field(default=True)# of build TextEncoder
     test_mode: bool = field(default=False)
-    train_clip: bool = field(default=False)
-    resume_ckpt: str = field(default=None)
-
-    pretrained_model: str = field(default=None)
-
     in_channels: int = field(default=1)
     out_channels: int = field(default=1)
     img_size: tuple = field(default=(32, 256, 256))
     patch_size: tuple = field(default=(4, 16, 16))
-
     hidden_size: int = field(default=768)
     mlp_dim: int = field(default=3072)
     num_layers: int = field(default=12)
@@ -45,7 +40,7 @@ class ModelArguments:
     pos_embed: str = field(default="perceptron")
     dropout_rate: float = field(default=0.0)
     spatial_dims: int = field(default=3)
-    num_clicks: int = field(default=2)
+    num_clicks: int = field(default=0)
 
 
 @dataclass
@@ -170,21 +165,22 @@ def main():
     parser = transformers.HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
-    # model_args.max_length = data_args.max_length
     config = R1Seg3DSAM_Config.from_dict(vars(model_args))
     config.mm_hidden_size = config.hidden_size
     model = model_registry['vit'](config=config, checkpoint=None)   # checkpoint for pretrained ViT
+    print("R1Seg3DSAM_Config >> ", config)
 
     if model_args.pretrained_model is not None:
-        ckpt = load_file(model_args.pretrained_model)
-        model.load_state_dict(ckpt, strict=False)
+        if model_args.pretrained_model.find(".safetensors") > 0:
+            ckpt = load_file(model_args.pretrained_model)
+        else:
+            ckpt = torch.load(model_args.pretrained_model, map_location='cpu')
+        model.load_state_dict(ckpt, strict=True)
         # rank0_print("pretrained_model >>>>>>>>>>>>>", ckpt.keys())
         rank0_print(">>>>>>>>>>>>>load pretrained model>>>>>>>>>>>>>")
 
     data_args.img_size = model_args.img_size
-    # eval_dataset = SegDatasets(data_args, mode='test')
-
-    eval_dataset = SegDatasets(data_args, tag=data_args.dataset_code, mode='test')# one dataset for eval
+    eval_dataset = SegDatasets(data_args, mode='test')
 
     data_collator = DataCollator()
     dataloader_params = {

@@ -116,7 +116,7 @@ class R1Seg3DSAM(nn.Module):
         else:
             sl_loss_dice = self.dice_loss(logits, train_segs)
             sl_loss_bce = self.bce_loss(logits, train_segs)
-            print('dice:',sl_loss_dice.item())
+            print('dice loss:',sl_loss_dice.item())
             sl_loss += sl_loss_dice + sl_loss_bce
         return sl_loss, logits
 

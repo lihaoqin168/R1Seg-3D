@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # 定义循环次数或参数范围
-start_num=0
-end_num=10
+start_num=11
+end_num=24
 
 # 循环调用sh，并传入参数 num
 
