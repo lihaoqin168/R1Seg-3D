@@ -15,8 +15,8 @@ accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml 
     --tune_mm_mlp_adapter false \
     --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --bf16 True \
-    --output_dir /107556523204/output/LLM_Seg3D/LaMed-finetune-rseg-Lora-Llama-8B-step4 \
-    --num_train_epochs 5 \
+    --output_dir /107556523204/output/LLM_Seg3D/LaMed-finetune-rseg-Lora-Llama-8B-step4-ep3 \
+    --num_train_epochs 3 \
     --per_device_train_batch_size 6 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 1 \

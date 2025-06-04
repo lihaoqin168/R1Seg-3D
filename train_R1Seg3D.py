@@ -430,7 +430,7 @@ def main():
 
     rank0_print("++ model_args.tune_mm_mlp_adapter", model_args.tune_mm_mlp_adapter)
 
-    if model_args.pretrain_mllm:
+    if model_args.pretrain_mllm and model_args.resume_ckpt is None:
         # ckpt = load_file(model_args.pretrain_mllm)
         ckpt = torch.load(model_args.pretrain_mllm, map_location='cpu')
         model.load_state_dict(ckpt, strict=False)

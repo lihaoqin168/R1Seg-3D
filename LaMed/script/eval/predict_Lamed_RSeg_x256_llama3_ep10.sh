@@ -10,8 +10,8 @@ echo "Running A.sh with num=$num"
 export TOKENIZERS_PARALLELISM=false
 export TORCH_NCCL_BLOCKING_WAIT=1
 # accelerate launch  --config_file /107556523204/haoqin/code/default4_config.yaml  
-CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/val_R1Seg-3D/eval_Lamed_RSeg.py \
-    --model_name_or_path /107556523204/output/R1Seg-3D/output_model/LaMed-finetune-rseg-Lora-llama3-8B-step4-ep12 \
+CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/R1Seg-3D/eval_R1Seg3D.py \
+    --model_name_or_path /107556523204/output/R1Seg-3D/output_model/LaMed-finetune-rseg-Lora-llama3-8B-step4-ep18/ \
     --num_clicks 2 \
     --model_type llama3 \
     --version v0 \
@@ -19,7 +19,7 @@ CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/val_R1Seg-3D/eval_Lamed_
     --bf16 True \
     --description True \
     --dataset_code $num \
-    --output_dir /107556523204/haoqin/val_R1Seg-3D/eval_llama3_ep12/ \
+    --output_dir /107556523204/haoqin/val_R1Seg-3D/eval_llama3_ep18/ \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \

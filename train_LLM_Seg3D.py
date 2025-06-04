@@ -13,6 +13,7 @@ from transformers import AutoTokenizer
 from dataclasses import dataclass, field
 from LaMed.src.dataset.llm_seg_dataset import MultiSegDataset
 from LaMed.src.model.language_model.phi3_Seg3D import Phi3_Seg3DForCausalLM
+from LaMed.src.model.language_model.llama3_Seg3D import Llama3_Seg3DForCausalLM
 from LaMed.src.train.lamed_trainer import LaMedTrainer
 local_rank = None
 
@@ -295,6 +296,11 @@ def main():
     if model_args.vision_module is not None and model_args.model_name_or_path is not None:
         if 'phi3' in model_args.model_type:
             model = Phi3_Seg3DForCausalLM.from_pretrained(
+                model_args.model_name_or_path,
+                cache_dir=training_args.cache_dir
+            )
+        elif 'llama3' in model_args.model_type:
+            model = Llama3_Seg3DForCausalLM.from_pretrained(
                 model_args.model_name_or_path,
                 cache_dir=training_args.cache_dir
             )

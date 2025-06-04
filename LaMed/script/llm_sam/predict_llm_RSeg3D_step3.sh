@@ -1,17 +1,21 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 # 获取传入的参数
+num=$1
 
-CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/M3D-ViT-RSeg/eval_R1Seg3D.py \
-    --model_name_or_path /107556523204/output/M3D-ViT-RSeg/LaMed/output_model/LaMed-Phi3-4B-X256-2nkSegcnt \
-    --num_clicks 3 \
-    --model_type phi3 \
+# 使用参数
+echo "Running A.sh with num=$num"
+
+CUDA_VISIBLE_DEVICES=0 python /107556523204/haoqin/code/R1Seg-3D/eval_LLMSeg3D.py \
+    --model_name_or_path /107556523204/output/LLM_Seg3D/output_model/LaMed-Lora-Phi3-4B-step3-ep3/ \
+    --num_clicks 2 \
+    --model_type llm_phi3 \
     --version v0 \
     --test_mode True \
     --bf16 True \
     --description True \
-    --dataset_code "0011" \
-    --output_dir /107556523204/haoqin/code/M3D-ViT-RSeg/eval_output3/ \
+    --dataset_code $num \
+    --output_dir /107556523204/haoqin/eval_llmSeg3D_phi3_step3-ep3/ \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \

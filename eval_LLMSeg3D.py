@@ -12,7 +12,7 @@ from LaMed.src.utils.nii_utils import saveToNii
 from LaMed.src.utils.slidingWindowInference import sliding_window_inference
 import numpy as np
 import pandas as pd
-from LaMed.src.dataset.multi_dataset import SegDataset, RefSegDataset
+from LaMed.src.dataset.llm_seg_dataset import SegDataset
 from LaMed.src.model.language_model.phi3_Seg3D import Phi3_Seg3DForCausalLM
 
 # from LaMed.src.dataset.dataset_info import dataset_info
@@ -277,8 +277,6 @@ def main():
     model.config.tune_mm_mlp_adapter = model_args.tune_mm_mlp_adapter
     rank0_print("=" * 20 + " Dataset preparation " + "=" * 20)
     data_args.max_length = training_args.model_max_length
-    data_args.proj_out_num = model.get_model().mm_projector.proj_out_num
-    rank0_print("vision tokens output from projector: ", data_args.proj_out_num)
 
     data_args.img_size = model_args.img_size
     # eval_dataset = MultiSegDataset(data_args, tokenizer, mode='test')
@@ -287,10 +285,7 @@ def main():
     #     ds_list.append(SegDataset(data_args, tokenizer, tag=dataset_code, description=data_args.description, mode='test'))
     # eval_dataset = ConcatDataset(ds_list)
 
-    if "RSeg" in data_args.dataset_code:
-        eval_dataset = RefSegDataset(args=data_args, tokenizer=tokenizer, mode='test')
-    else:
-        eval_dataset = SegDataset(args=data_args, tokenizer=tokenizer, tag=data_args.dataset_code,
+    eval_dataset = SegDataset(args=data_args, tokenizer=tokenizer, tag=data_args.dataset_code,
                                   description=data_args.description, mode='test')
 
     data_collator = DataCollator()

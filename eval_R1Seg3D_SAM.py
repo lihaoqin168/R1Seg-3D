@@ -308,6 +308,9 @@ def main():
         csv_dict["val"] = col6
         df = pd.DataFrame(csv_dict)
         # 保存 dataframe
+        if not os.path.exists(training_args.output_dir):
+            os.mkdir(training_args.output_dir)
+        # 保存 dataframe
         df.to_csv(os.path.join(training_args.output_dir, "num_clicks"+str(model_args.num_clicks)+"_"+data_args.dataset_code+"_report.csv"))
 
 
