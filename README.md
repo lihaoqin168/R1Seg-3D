@@ -2,7 +2,7 @@
 
 [Paper]:https://
 [Model]:https://huggingface.co/lihao0011/R1Seg-3D-Phi-3-4B
-<font size=3><div align='center' > <a href=https://arxiv.org/abs/2404.00578>**Paper**</a> | [**Data**][data] | [**Model**][model] | [**Training**](#training) | [**Benchmark**](#benchmark) | [**Online Demo**][demo]</div></font>
+<font size=3><div align='center' > <a href=https://arxiv.org/abs/2404.00578>**Paper**</a> | [**Model**][model] </div></font>
 The explosive development of large-scale model technology has provided strong support for achieving more intelligent, robust, 
 and precise segmentation techniques. However, owing to the unique challenges posed by medical domain data, 
 the typical 3D medical image-text alignment model, 3D CLIP, struggles to match the performance of its natural scene counterpart. 
