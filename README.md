@@ -86,6 +86,8 @@ ssv.display(seg)
 |----------|-----------------------------------------------------------------------------------------------------------------------------------------------|
 | R1Seg-3D-SAM | [HuggingFace](https://huggingface.co/lihao0011/R1Seg-3D-SAM)   |
 | R1Seg-3D-Phi-3-4B  | [HuggingFace](https://huggingface.co/lihao0011/R1Seg-3D-Phi-3-4B)|
+| R1Seg-3D-llama-3-8B  | [HuggingFace](https://huggingface.co/lihao0011/R1Seg-3D-llama-3-8B)|
+
 ## Data
 
 | Dataset  | Type | Images | Texts | Download Link |
