@@ -1,24 +1,21 @@
 # R1Seg-3D: Rethinking Reasoning Segmentation for Medical 3D CTs
 
-[demo]:https://08778b8abe6ef5b6dd.gradio.live/
-[data]:https://www.modelscope.cn/models/yuxindu/SegVol/summary
-[model]:https://huggingface.co/GoodBaiBai88/M3D-LaMed-Phi-3-4B
+[Paper]:https://
+[Model]:https://huggingface.co/lihao0011/R1Seg-3D-Phi-3-4B
 <font size=3><div align='center' > <a href=https://arxiv.org/abs/2404.00578>**Paper**</a> | [**Data**][data] | [**Model**][model] | [**Training**](#training) | [**Benchmark**](#benchmark) | [**Online Demo**][demo]</div></font>
-M3D is the pioneering and comprehensive series of work on the  multi-modal large language model for 3D medical analysis, including:
-- **M3D-Data**: the largest-scale open-source 3D medical dataset, consists of 120K image-text pairs and 662K instruction-response pairs;
-- **M3D-LaMed**: the versatile multi-modal models with M3D-CLIP pretrained vision encoder, which are capable of tasks such as image-text retrieval, report generation, visual question answering, positioning and segmentation;
-- **M3D-Bench**: the most comprehensive automatic evaluation benchmark covers 8 tasks.
-
-## Notifications
-📢 [2024.06.12]
-- 🔥🔥🔥 We released an [online demo][demo]. Welcome everyone to try it now!
-- We released a light but strong model, M3D-LaMed-Phi-3-4B. After simple testing, it outperformed M3D-LaMed-Llama-2-7B. We are conducting detailed experiments. Please try it first.
-- We found that the previous M3D-LaMed-Llama-2-7B model had problems in the segmentation task. We have fixed this problem and will re-release the new model in the next few days.
-
-## News
-- [x] [2024.06.14] We released a light but strong model [M3D-LaMed-Phi-3-4B](https://huggingface.co/GoodBaiBai88/M3D-LaMed-Phi-3-4B) and an [online demo][demo].
-- [x] [2024.04.28] We released the data, code, and model.
-
+The explosive development of large-scale model technology has provided strong support for achieving more intelligent, robust, 
+and precise segmentation techniques. However, owing to the unique challenges posed by medical domain data, 
+the typical 3D medical image-text alignment model, 3D CLIP, struggles to match the performance of its natural scene counterpart. 
+This limitation hinders the application of CLIP-based text-image reasoning in medical segmentation tasks. 
+Furthermore, CLIP has been shown to rely on high-level semantic alignment between vision and text, 
+lacking effective support for local visual features that are crucial for dense prediction tasks. 
+Existing reasoning segmentation methods often adopt a redundant design with two visual encoders—one from CLIP and the other from large vision models for downstream dense tasks. 
+This adversely affects model efficiency and complicates the training process. 
+To address these challenges, we propose a novel framework, R1Seg-3D, which unifies a visual encoder. 
+Our approach achieves a three-way alignment of dense visual, text reasoning, and mask decoding features within a shared latent space. 
+Compared with previous methods, R1Seg-3D implicitly incorporates more detailed spatial features into the reasoning path. 
+Therefore, it can strengthen the reasoning ability by incorporating additional visual spatial details and directly enhances the 
+mask decoding process. The R1Seg-3D architecture is more concise and easier to be trained.
 
 ## Quickstart
 Here, we can easily use our model based on Hugging Face.
@@ -33,7 +30,7 @@ import SimpleITK as sikt
 device = torch.device('cuda') # 'cpu', 'cuda'
 dtype = torch.bfloat16 # or bfloat16, float16, float32
 
-model_name_or_path = 'GoodBaiBai88/M3D-LaMed-Phi-3-4B'
+model_name_or_path = 'lihao0011/R1Seg-3D-Phi-3-4B'
 proj_out_num = 256
 
 # Prepare your 3D medical image:
@@ -87,55 +84,19 @@ ssv.display(seg)
 ## Model
 | Model    | Download Link                                                                                                                                 |
 |----------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| M3D-CLIP | [HuggingFace](https://huggingface.co/GoodBaiBai88/M3D-CLIP), [ModelScope]()    |
-| M3D-LaMed-Phi-3-4B  | [HuggingFace](https://huggingface.co/GoodBaiBai88/M3D-LaMed-Phi-3-4B), [ModelScope]()|
-| M3D-LaMed-Llama-2-7B  | [HuggingFace](https://huggingface.co/GoodBaiBai88/M3D-LaMed-Llama-2-7B), [ModelScope]()|
-
-
-## Installation
-```bash
-git clone https://github.com/BAAI-DCAI/M3D.git
-pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
-```
-
+| R1Seg-3D-SAM | [HuggingFace](https://huggingface.co/lihao0011/R1Seg-3D-SAM)   |
+| R1Seg-3D-Phi-3-4B  | [HuggingFace](https://huggingface.co/lihao0011/R1Seg-3D-Phi-3-4B)|
 ## Data
-M3D-Data supports the training and benchmark, which consist of 4 types of data:
 
 | Dataset  | Type | Images | Texts | Download Link |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| M3D-Cap | 3D image-text pairs |	120,092 | 42,496 | [HuggingFace](https://huggingface.co/datasets/GoodBaiBai88/M3D-Cap), [ModelScope](https://www.modelscope.cn/datasets/GoodBaiBai88/M3D-Cap) |
-| M3D-VQA | 3D images, questions, and answers |	96,170 | 509,755 | [HuggingFace](https://huggingface.co/datasets/GoodBaiBai88/M3D-VQA), [ModelScope](https://www.modelscope.cn/datasets/GoodBaiBai88/M3D-VQA) |
 | M3D-Seg | 3D images, category text, and segmentation masks | 5,772 | 149,196 | [HuggingFace](https://huggingface.co/datasets/GoodBaiBai88/M3D-Seg), [ModelScope](https://www.modelscope.cn/datasets/GoodBaiBai88/M3D-Seg) |
-| M3D-RefSeg | 3D images, questions, answers, and segmentation masks |	210 | 2,778 | [HuggingFace](https://huggingface.co/datasets/GoodBaiBai88/M3D-RefSeg), [ModelScope](https://www.modelscope.cn/datasets/GoodBaiBai88/M3D-RefSeg) |
-
-Please follow the instructions for each dataset to download and preprocess.
-You can find the preprocess file named `m3d_xx_data_prepare.py` in dataset description or `Data/process/` for M3D-Cap, M3D-Seg and M3D-RefSeg.
-We recommend saving the downloaded and processed dataset to `Data/data/`.
-
-## Training
-### Pretrained Weights
-To train M3D-LaMed, you need to prepare some pretrained weights for better performance and faster convergence.
-
-#### Vision encoder
-We recommend downloading the medical 3D ViT weight `pretrained_ViT.bin` from [M3D-CLIP](https://huggingface.co/GoodBaiBai88/M3D-CLIP/tree/main) directly.
-Or you can also pretrain the 3D ViT by yourself by
-```bash
-sh LaMed/script/train_clip.sh
-```
 
 #### LLM
 Phi-3-4B: Download and follow [here](https://huggingface.co/microsoft/Phi-3-mini-128k-instruct).
 Llama-2-7B: Download and follow [here](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf).
 Llama-2-7B: Download and follow [here](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf).
 Llama-2-7B: Download and follow [here](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf).
-
-#### Segmentation module
-SegVol: Download and follow [here](https://huggingface.co/BAAI/SegVol/tree/main).
-
-### Training
-Our training consists of four steps. 
-- **Step 1**: [Pretrain](#step-1-pretrain)
-- **Step 2**: [Visual Instruction Tuning](#step-2-visual-instruction-tuning)
 
 #### Configuration
 We suggest using `accelerate` to train. It was developed by Hugging Face 
@@ -174,57 +135,9 @@ use_cpu: false
 ```
 </details>
 
-#### Step 1: Pretrain
-We should align vision and language with image-text data, that is, only train mm_projector and freeze the vision encoder and LLM. 
-
-Please update LLM path `--model_name_or_path` and vision encoder path `--pretrain_vision_model`, respectively.
-Update `--output_dir` to specify the output path of the model.
-Then run the script by:
-```bash
-sh LaMed/script/pretrain_phi3.sh
-```
-
-#### Step 2: Visual Instruction Tuning
-Visual instruction tuning through multi-task data of image-text pairs, VQA, positioning and segmentation, 
-that is, only perform LoRA training on LLM, and unfreeze all other models.
-
-Please update LLM path `--model_name_or_path`, vision encoder path `--pretrain_vision_model`, model path saved by Step 1`--pretrain_mm_mlp_adapter` and segmentation module path `--pretrain_seg_module`, respectively.
-Update `--output_dir` to specify the output path of the model.
-Then run the script by:
-```bash
-sh LaMed/script/finetune_lora_phi3.sh
-```
-
-### Merge LoRA Weight
-Merge the LoRA weights of `model_with_lora.bin`, save the final model into your desired path in the Hugging Face format:
-```bash
-CUDA_VISIBLE_DEVICES="" python merge_lora_weights_and_save_hf_model.py \
-  --version="" \
-  --model_type="" \
-  --model_with_lora="PATH_TO_model_with_lora.bin" \
-  --output_dir="PATH_TO_SAVED_MODEL"
-```
-
-## Benchmark
-We propose the most comprehensive automatic evaluation benchmark covers 8 tasks in 3D medical, including 
-image-text retrival, report generation, closed-ended VQA, open-ended VQA, referring expression comprehension,
-referring expression generation, semantic segmentation, referring expression segmentation.
-
-### Evaluation
-We can directly evaluate each task by running:
-```bash
-CUDA_VISIBLE_DEVICES="" python Bench/eval/eval_TASK.py
-```
-
-We also provide a more accurate automatic evaluation of report generation tasks using LLM, 
-after modifying the `file_path`, please run:
-```bash
-CUDA_VISIBLE_DEVICES="" python Bench/eval/eval_with_llm.py
-```
-
 
 ## Citation
-If our dataset or project are helpful to you, please consider citing:
+If our project are helpful to you, please consider citing:
 
 ```BibTeX
 @misc{R1Seg-3D,
@@ -232,7 +145,7 @@ If our dataset or project are helpful to you, please consider citing:
       author={Qinhao and Long Yu and Shengwei Tian and Xujiong Ye and Lei Zhang},
       year={2025},
       eprint={2025.00578},
-      archivePrefix={arXiv},
+      archivePrefix={},
       primaryClass={cs.CV}
 }
 ```
