@@ -25,10 +25,6 @@ mask decoding process. The R1Seg-3D architecture is more concise and easier to b
 | R1Seg-3D-llama-3-8B  | [HuggingFace](https://huggingface.co/lihao0011/R1Seg-3D-llama-3-8B)|
 
 
-#### LLM
-Phi-3-4B: Download and follow [here](https://huggingface.co/microsoft/Phi-3-mini-128k-instruct).
-Llama-3.1-8B: Download and follow [here](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct).
-
 #### Configuration
 We suggest using `accelerate` to train. It was developed by Hugging Face 
 and conveniently supports common training strategies such as distributed training, mixed precision, DeepSpeed, etc.
