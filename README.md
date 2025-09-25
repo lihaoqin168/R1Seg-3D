@@ -1,6 +1,6 @@
 # R1Seg-3D: Rethinking Reasoning Segmentation for Medical 3D CTs
 
-[Paper]:https://
+[Paper]:https://ore.exeter.ac.uk/articles/conference_contribution/R1Seg-3D_Rethinking_Reasoning_Segmentation_for_Medical_3D_CTs/30024691
 [Model]:https://huggingface.co/lihao0011/R1Seg-3D-Phi-3-4B
 <font size=3><div align='center' > <a href=https://arxiv.org/abs/2404.00578>**Paper**</a> | [**Model**][model] </div></font>
 The explosive development of large-scale model technology has provided strong support for achieving more intelligent, robust, 
