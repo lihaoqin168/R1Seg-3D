@@ -99,7 +99,6 @@ class ITRDataset(Dataset):
                 image_abs_path = os.path.join(self.data_root, image_path)
 
                 image = np.load(image_abs_path)  # nomalized 0-1, C,D,H,W
-                # image = np.load(img_abs_path)[np.newaxis, ...]  # nomalized
                 image = self.transform(image)
 
                 text_path = data["text"]
@@ -185,7 +184,6 @@ class CapDataset(Dataset):
                 image_abs_path = os.path.join(self.data_root, image_path)
 
                 image = np.load(image_abs_path)  # nomalized 0-1, C,D,H,W
-                # image = np.load(img_abs_path)[np.newaxis, ...]  # nomalized
                 image = self.transform(image)
 
                 text_path = data["text"]
@@ -227,7 +225,6 @@ class CapDataset(Dataset):
                 if torch.isnan(torch.max(image)) or torch.isnan(torch.max(input_id)) \
                         or torch.isnan(torch.max(attention_mask)):
                     print('data loader !!!!!!image is NaN >>')
-                    # 抛出一个常规的ValueError异常
                     raise ValueError("image has NaN" + str(image_path))
 
                 ret = {
@@ -301,8 +298,6 @@ class CaptionSegDataset(Dataset):
                 mtf.RandRotate90d(keys=["image", "seg"], prob=0.2, spatial_axes=(1, 2)),
                 mtf.RandRotate90d(keys=["image", "seg"], prob=0.2, spatial_axes=(1, 2)),
                 mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=0),
-                # mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=1),
-                # mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=2),
                 mtf.RandScaleIntensityd(keys="image", factors=0.1, prob=0.5),
                 mtf.RandShiftIntensityd(keys="image", offsets=0.1, prob=0.5),
                 mtf.ToTensord(keys=["image"], dtype=torch.float),
@@ -461,8 +456,6 @@ class CaptionRefSegDataset(Dataset):
                 mtf.RandRotate90d(keys=["image", "seg"], prob=0.2, spatial_axes=(1, 2)),
                 mtf.RandRotate90d(keys=["image", "seg"], prob=0.2, spatial_axes=(1, 2)),
                 mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=0),
-                # mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=1),
-                # mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=2),
                 mtf.RandScaleIntensityd(keys="image", factors=0.1, prob=0.5),
                 mtf.RandShiftIntensityd(keys="image", offsets=0.1, prob=0.5),
                 mtf.ToTensord(keys=["image"], dtype=torch.float),
@@ -505,7 +498,6 @@ class CaptionRefSegDataset(Dataset):
                 image_array = np.load(image_path)  # 1*32*256*256, normalized
                 seg_array = np.load(seg_path)
                 if np.sum(seg_array)==0:
-                    # 抛出一个常规的ValueError异常
                     raise ValueError("sum(seg)==0" + str(image_path))
                 seg_array = (seg_array == data["Mask_ID"]).astype(np.int8)
 
@@ -560,7 +552,6 @@ class CaptionRefSegDataset(Dataset):
                 if torch.isnan(torch.max(image)) or torch.isnan(torch.max(input_id)) \
                         or torch.isnan(torch.max(attention_mask)):
                     print('data loader !!!!!!image is NaN >>')
-                    # 抛出一个常规的ValueError异常
                     raise ValueError("image has NaN" + str(image_path))
 
                 ret = {
@@ -636,7 +627,6 @@ class VQADataset(Dataset):
                 image_abs_path = os.path.join(self.args.data_root, data["Image Path"])
 
                 image = np.load(image_abs_path)  # nomalized, 0-1, C,D,H,W
-                # image = np.load(img_path)[np.newaxis, ...]  # nomalized
 
                 image = self.transform(image)
 
@@ -679,7 +669,6 @@ class VQADataset(Dataset):
                 if torch.isnan(torch.max(image)) or torch.isnan(torch.max(input_id)) \
                         or torch.isnan(torch.max(attention_mask)):
                     print('data loader !!!!!!image is NaN >>')
-                    # 抛出一个常规的ValueError异常
                     raise ValueError("image has NaN" + str(image_abs_path))
 
                 ret = {
@@ -755,8 +744,6 @@ class SegDataset(Dataset):
                 mtf.RandRotate90d(keys=["image", "seg"], prob=0.2, spatial_axes=(1, 2)),
                 mtf.RandRotate90d(keys=["image", "seg"], prob=0.2, spatial_axes=(1, 2)),
                 mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=0),
-                # mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=1),
-                # mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=2),
                 mtf.RandScaleIntensityd(keys="image", factors=0.1, prob=0.5),
                 mtf.RandShiftIntensityd(keys="image", offsets=0.1, prob=0.5),
                 mtf.ToTensord(keys=["image"], dtype=torch.float),
@@ -914,8 +901,6 @@ class RefSegDataset(Dataset):
                 mtf.RandRotate90d(keys=["image", "seg"], prob=0.2, spatial_axes=(1, 2)),
                 mtf.RandRotate90d(keys=["image", "seg"], prob=0.2, spatial_axes=(1, 2)),
                 mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=0),
-                # mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=1),
-                # mtf.RandFlipd(keys=["image", "seg"], prob=0.10, spatial_axis=2),
                 mtf.RandScaleIntensityd(keys="image", factors=0.1, prob=0.5),
                 mtf.RandShiftIntensityd(keys="image", offsets=0.1, prob=0.5),
                 mtf.ToTensord(keys=["image"], dtype=torch.float),
@@ -1036,7 +1021,6 @@ class MultiSegDataset(Dataset):
         self.dataset_info = dataset_info
 
         self.ds_list = []
-        # self.ds_list.append(RefSegDataset(args, tokenizer, mode=mode))
         for dataset_code in self.dataset_info.keys():
             self.ds_list.append(SegDataset(args, tokenizer, tag=dataset_code, description=False, mode=mode))
             self.ds_list.append(SegDataset(args, tokenizer, tag=dataset_code, description=True, mode=mode))
@@ -1054,9 +1038,6 @@ class TextDatasets(Dataset):
         super(TextDatasets, self).__init__()
         self.dataset_info = dataset_info
         self.ds_list = [
-            # CapDataset(args, tokenizer, mode),
-            # VQADataset(args, tokenizer, close_ended=True, mode=mode),
-            # VQADataset(args, tokenizer, close_ended=False, mode=mode),
             CaptionRefSegDataset(args, tokenizer, mode),
         ]
         for dataset_code in self.dataset_info.keys():
@@ -1075,13 +1056,7 @@ class UniDatasets(Dataset):
     def __init__(self, args, tokenizer, mode='train'):
         super(UniDatasets, self).__init__()
         self.ds_list = [
-            # CapDataset(args, tokenizer, mode),
-            # VQADataset(args, tokenizer, close_ended=True, mode=mode),
-            # VQADataset(args, tokenizer, close_ended=False, mode=mode),
-            # VQAYNDataset(args, tokenizer, mode=mode),
-            # MultiPosDataset(args, tokenizer, mode),
             MultiSegDataset(args, tokenizer, mode),
-            # MultiSegDataset(args, tokenizer, mode),
         ]
         self.dataset = ConcatDataset(self.ds_list)
 
