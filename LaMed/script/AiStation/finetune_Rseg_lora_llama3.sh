@@ -1,5 +1,4 @@
 #!/bin/bash
-#Phi-3-mini-4k-instruct
 # run "accelerate config" first!
 
 accelerate launch  --config_file /code/default6_config.yaml /code/R1Seg-3D/train_R1Seg3D.py \
