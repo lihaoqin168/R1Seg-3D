@@ -1,21 +1,18 @@
 #!/bin/bash
 #Llama-3.1-8B
 # run "accelerate config" first!
-#export TOKENIZERS_PARALLELISM=false
-#export TORCH_NCCL_BLOCKING_WAIT=1
-export NCCL_TIMEOUT=1800  # 1800秒 = 30分钟
 
-accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
+accelerate launch  --config_file /default6_config.yaml /code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
     --num_clicks 2 \
-    --model_name_or_path /107556523204/pretrain/Llama-3.1-8B \
+    --model_name_or_path /pretrain/Llama-3.1-8B \
     --model_type llama3 \
     --lora_enable False \
     --seg_enable False \
-    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
+    --pretrain_vision_model /output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --tune_mm_mlp_adapter True \
     --bf16 True \
-    --output_dir /107556523204/output/R1Seg-3D/LaMed-mmproj-llama3-8B-step2 \
+    --output_dir /output/R1Seg-3D/LaMed-mmproj-llama3-8B-step2 \
     --num_train_epochs 2 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
