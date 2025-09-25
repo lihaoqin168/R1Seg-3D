@@ -1,19 +1,18 @@
 #!/bin/bash
 #Phi-3-mini-4k-instruct
 # run "accelerate config" first!
-export NCCL_TIMEOUT=1800  # 1800秒 = 30分钟
 
-accelerate launch  --config_file /107556523204/haoqin/code/default6_config.yaml /107556523204/haoqin/code/R1Seg-3D/train_R1Seg3D.py \
+accelerate launch  --config_file /code/default6_config.yaml /code/R1Seg-3D/train_R1Seg3D.py \
     --version v0 \
     --num_clicks 2 \
-    --model_name_or_path /107556523204/pretrain/Llama-3.1-8B \
-    --pretrain_mllm /107556523204/output/R1Seg-3D/LaMed-Lora-llama3-8B-step3/model_with_lora.bin \
+    --model_name_or_path /pretrain/Llama-3.1-8B \
+    --pretrain_mllm /output/R1Seg-3D/LaMed-Lora-llama3-8B-step3/model_with_lora.bin \
     --model_type llama3 \
     --lora_enable True \
     --tune_vision_module True \
     --seg_enable True \
     --tune_mm_mlp_adapter false \
-    --pretrain_vision_model /107556523204/output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
+    --pretrain_vision_model /output/R1Seg-3D/R1Seg-3DSAM-step1/r1seg_3dsam.bin \
     --bf16 True \
     --output_dir /107556523204/output/R1Seg-3D/LaMed-finetune-rseg-Lora-llama3-8B-step4 \
     --num_train_epochs 3 \
