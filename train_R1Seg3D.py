@@ -150,29 +150,12 @@ def compute_metrics(eval_preds):
     acc_score = sum(filtered_preds==filtered_labels) / len(filtered_labels)
     return {"accuracy": acc_score}
 
-# def compute_metrics(pred):
-#     # 解包标签和额外的数据
-#     labels, additional_data = pred.label_ids
-#     # 获取模型预测
-#     preds = pred.predictions.argmax(-1)
-#     # 计算精确度、召回率、F1分数和准确率
-#     precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='binary')
-#     acc = accuracy_score(labels, preds)
-#     # 返回计算的评价指标
-#     return {
-#     'accuracy': acc,
-#     'f1': f1,
-#     'precision': precision,
-#     'recall': recall
-#     }
-
 def preprocess_logits_for_metrics(logits, labels):
 
     print("++logits", logits.shape)
     print("++labels", labels.shape)
     pred_ids = torch.argmax(logits, dim=-1)
     return pred_ids
-
 
 def maybe_zero_3(param, ignore_status=False, name=None):
     from deepspeed import zero
