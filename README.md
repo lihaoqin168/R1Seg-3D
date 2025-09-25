@@ -17,70 +17,6 @@ Compared with previous methods, R1Seg-3D implicitly incorporates more detailed s
 Therefore, it can strengthen the reasoning ability by incorporating additional visual spatial details and directly enhances the 
 mask decoding process. The R1Seg-3D architecture is more concise and easier to be trained.
 
-## Quickstart
-Here, we can easily use our model based on Hugging Face.
-
-```python
-import numpy as np
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import simple_slice_viewer as ssv
-import SimpleITK as sikt
-
-device = torch.device('cuda') # 'cpu', 'cuda'
-dtype = torch.bfloat16 # or bfloat16, float16, float32
-
-model_name_or_path = 'lihao0011/R1Seg-3D-Phi-3-4B'
-proj_out_num = 256
-
-# Prepare your 3D medical image:
-# 1. The image shape needs to be processed as 1*32*256*256, consider resize and other methods.
-# 2. The image needs to be normalized to 0-1, consider Min-Max Normalization.
-# 3. The image format needs to be converted to .npy 
-# 4. Although we did not train on 2D images, in theory, the 2D image can be interpolated to the shape of 1*32*256*256 for input.
-image_path = "./Data/data/examples/example_03.npy"
-
-model = AutoModelForCausalLM.from_pretrained(
-    model_name_or_path,
-    torch_dtype=dtype,
-    device_map='auto',
-    trust_remote_code=True)
-tokenizer = AutoTokenizer.from_pretrained(
-    model_name_or_path,
-    model_max_length=512,
-    padding_side="right",
-    use_fast=False,
-    trust_remote_code=True
-)
-
-model = model.to(device=device)
-
-# question = "Can you provide a caption consists of findings for this medical image?"
-question = "What is liver in this image? Please output the segmentation mask."
-# question = "What is liver in this image? Please output the box."
-
-image_tokens = "<im_patch>" * proj_out_num
-input_txt = image_tokens + question
-input_id = tokenizer(input_txt, return_tensors="pt")['input_ids'].to(device=device)
-
-image_np = np.load(image_path)
-image_pt = torch.from_numpy(image_np).unsqueeze(0).to(dtype=dtype, device=device)
-
-# generation = model.generate(image_pt, input_id, max_new_tokens=256, do_sample=True, top_p=0.9, temperature=1.0)
-generation, seg_logit = model.generate(image_pt, input_id, seg_enable=True, max_new_tokens=256, do_sample=True, top_p=0.9, temperature=1.0)
-
-generated_texts = tokenizer.batch_decode(generation, skip_special_tokens=True)
-seg_mask = (torch.sigmoid(seg_logit) > 0.5) * 1.0
-
-print('question', question)
-print('generated_texts', generated_texts[0])
-
-image = sikt.GetImageFromArray(image_np)
-ssv.display(image)
-seg = sikt.GetImageFromArray(seg_mask.cpu().numpy()[0])
-ssv.display(seg)
-```
-
 ## Model
 | Model    | Download Link                                                                                                                                 |
 |----------|-----------------------------------------------------------------------------------------------------------------------------------------------|
@@ -88,11 +24,6 @@ ssv.display(seg)
 | R1Seg-3D-Phi-3-4B  | [HuggingFace](https://huggingface.co/lihao0011/R1Seg-3D-Phi-3-4B)|
 | R1Seg-3D-llama-3-8B  | [HuggingFace](https://huggingface.co/lihao0011/R1Seg-3D-llama-3-8B)|
 
-## Data
-
-| Dataset  | Type | Images | Texts | Download Link |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
-| M3D-Seg | 3D images, category text, and segmentation masks | 5,772 | 149,196 | [HuggingFace](https://huggingface.co/datasets/GoodBaiBai88/M3D-Seg), [ModelScope](https://www.modelscope.cn/datasets/GoodBaiBai88/M3D-Seg) |
 
 #### LLM
 Phi-3-4B: Download and follow [here](https://huggingface.co/microsoft/Phi-3-mini-128k-instruct).
